@@ -34,7 +34,9 @@ function Catagory() {
   const [category, setCategory] = useState([]);
   const { addCat, deleteCat, Categories } = useCategory();
 
+  const [platform, setPlatform] = useState([]);
   const { addplatform, deleteplatform, Platforms } = usePlatform();
+
   const [platformName, setplatformName] = useState('');
   const [platformUrl, setplatformUrl] = useState('');
 
@@ -90,7 +92,6 @@ function Catagory() {
       };
       console.log(data_platform);
       const response = await axios.post('http://localhost:3001/platform', data_platform);
-      console.log(response);
       if (response.statusText == 'OK') {
         addplatform(data_platform.name, data_platform.url, response.data.Platform._id);
         handleCloseAddPlatformLogo();
@@ -105,7 +106,6 @@ function Catagory() {
     e.preventDefault();
     try {
       const response_del = await axios.delete(`http://localhost:3001/platform/${name_plat}`);
-      console.log(response_del);
       if (response_del.statusText == 'OK') {
         deleteplatform(name_plat);
       }
@@ -117,12 +117,14 @@ function Catagory() {
 
   useEffect(() => {
     axios.get("http://localhost:3001/category").then((response) => {
-      // console.log(response.data.Categories[0].name);
-      // console.log(response.data.Categories[1].name);
-      // console.log(response.data.Categories[2].name);
-      // console.log(response.data.Categories[3].name);
-      // console.log(response.data.Categories[4].name);
       setCategory(response.data.Categories);
+    }).catch((error) => {
+      console.log(error);
+    })
+
+    axios.get("http://localhost:3001/platform").then((response) => {
+      console.log(response.data.Platforms);
+      setPlatform(response.data.Platforms);
     }).catch((error) => {
       console.log(error);
     })
@@ -167,7 +169,7 @@ function Catagory() {
                             fontSize: "1.35rem",
                             borderRadius: "5px",
                             marginLeft: "10px",
-                            verticalAlign: "bottom",
+                            verticalAlign: "bottom"
                           }}
                         />
                       </div>
@@ -196,70 +198,30 @@ function Catagory() {
             <Divider style={{ marginTop: "5px" }}></Divider>
 
             <div className="cata-list">
-              {Platforms?.map((plat, id) => (
+
+              {platform?.map((plat, id) => (
                 <div className="log-div" key={id}>
                   <img
-                    src={plat.platformUrl}
+                    src={plat.url}
                     alt="platform-logo"
                   />
                   <DeleteIcon
                     onClick={(e) => {
-                      PlatformDeleteHandler(e, plat.platformName);
+                      PlatformDeleteHandler(e, plat.name);
                     }}
                     className="del-cata"
                     style={{
                       color: "red",
-                      fontSize: "20px",
-                      backgroundColor: "  rgb(184, 180, 180)",
+                      fontSize: "1.35rem",
                       borderRadius: "5px",
                       marginLeft: "10px",
                       verticalAlign: "bottom",
                     }}
                   />
-                  <span>{plat.platformName}</span>
+                  <span>{plat.name}</span>
                 </div>
               ))}
 
-              <div className="log-div">
-                <img
-                  src="https://play-lh.googleusercontent.com/AZW3Q9fPfsjhJncEpiAEsfteaz3pep88Tfy2-sjjf4Ib7wfM0M6B0TcRuW3-JJsS2oVz"
-                  alt="platform-logo"
-                />
-                <DeleteIcon
-                  onClick={() => {
-                    handleOpenDeleteLogo(true);
-                  }}
-                  className="del-cata"
-                  style={{
-                    color: "red",
-                    fontSize: "20px",
-                    backgroundColor: "  rgb(184, 180, 180)",
-                    borderRadius: "5px",
-                    marginLeft: "10px",
-                    verticalAlign: "bottom",
-                  }}
-                />
-              </div>
-              <div className="log-div">
-                <img
-                  src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera.s3.amazonaws.com/media/coursera-rebrand-logo-square.png?auto=format%2Ccompress&dpr=1"
-                  alt="platform-logo"
-                />
-                <DeleteIcon
-                  onClick={() => {
-                    handleOpenDeleteLogo(true);
-                  }}
-                  className="del-cata"
-                  style={{
-                    color: "red",
-                    fontSize: "20px",
-                    backgroundColor: "  rgb(184, 180, 180)",
-                    borderRadius: "5px",
-                    marginLeft: "10px",
-                    verticalAlign: "bottom",
-                  }}
-                />
-              </div>
             </div>
           </div>
         </div>

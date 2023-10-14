@@ -249,7 +249,7 @@ app.post("/category", async (req, res) => {
 app.get("/category", async (req, res) => {
     try {
         const response = await Category.find({});
-        console.log(response);
+        // console.log(response);
         res.status(200).json({
             Categories: response
         });
@@ -335,6 +335,19 @@ app.post("/google/signin", async (req, res) => {
     }
 
 });
+
+app.get('/platform', async (req, res) => {
+    try {
+        const response = await Platform.find({});
+        console.log(response);
+        res.status(200).json({
+            Platforms: response
+        });
+    }
+    catch (err) {
+        console.log(err);
+    }
+})
 
 app.post("/platform", async (req, res) => {
     try {
